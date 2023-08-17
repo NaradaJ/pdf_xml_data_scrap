@@ -17,7 +17,7 @@ def extract_data(element):
     return data
 
 # Parse the XML file
-tree = ET.parse('path_to_your_xml_file.xml')  # Replace with your XML file path
+tree = ET.parse(r'C:\Users\NArada...RaaZa\Desktop\New folder\Data_Scrap\customers.xml')  # Replace with your XML file path
 root = tree.getroot()
 
 # List to store extracted data
@@ -31,7 +31,7 @@ for element in root:
 df = pd.DataFrame(extracted_data)
 
 # Specify the full path to save the CSV file
-csv_path = 'path_to_save/csv_filename.csv'  # Replace with your desired CSV file path
+csv_path = r'C:\Users\NArada...RaaZa\Desktop\New folder\Data_Scrap\0827\0817'  
 
 # Export the DataFrame to a CSV file using the specified path
 df.to_csv(csv_path, index=False)
