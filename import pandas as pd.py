@@ -1,22 +1,39 @@
-import pandas as pd 
-import pdfquery
+import xml.etree.ElementTree as ET
+import pandas as pd
 
-# Define the path to the PDF file
-pdf_path = r'C:\Users\NArada...RaaZa\Desktop\New folder\Data_Scrap\BDO Global - Monthly Services Desk Statistics Report October 2019.pdf'
+# Recursive function to extract data from elements
+def extract_data(element):
+    data = {
+        "tag": element.tag,
+        "attributes": element.attrib,
+        "text_content": element.text.strip() if element.text else "",
+    }
 
-# Read the PDF
-pdf = pdfquery.PDFQuery(pdf_path)
-pdf.load()
+    # Recursively process sub-elements
+    for sub_element in element:
+        sub_data = extract_data(sub_element)
+        data.setdefault("sub_elements", []).append(sub_data)
 
-# Define the path to save the XML file
-xml_path = r'C:\Users\NArada...RaaZa\Desktop\New folder\Data_Scrap\customers.xml'
+    return data
 
-# Convert the PDF to XML
-pdf.tree.write(xml_path, pretty_print=True)
+# Parse the XML file
+tree = ET.parse('path_to_your_xml_file.xml')
+root = tree.getroot()
 
-# Access the data using coordinates
-table_title = pdf.pq('LTTextLineHorizontal:in_bbox("956,999,1557,1055")').text()
+# List to store extracted data
+extracted_data = []
 
-# Print the extracted customer name
-print("Extracted table_title:", table_title)
-print("Finished")
+# Iterate through elements
+for element in root:
+    extracted_data.append(extract_data(element))
+
+# Create a pandas DataFrame from the extracted data
+df = pd.DataFrame(extracted_data)
+
+# Specify the full path to save the CSV file
+csv_path = r'C:\Users\NArada...RaaZa\Desktop\New folder\Data_Scrap\0827\0817\csv_filename.csv'
+
+# Export the DataFrame to a CSV file using the specified path
+df.to_csv(csv_path, index=False)
+
+print(f"Data exported to {csv_path}")
